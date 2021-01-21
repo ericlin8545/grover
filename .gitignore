@@ -1,3 +1,6 @@
+# Too Large
+output/model.ckpt-1562.*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
