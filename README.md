@@ -70,3 +70,54 @@ Our core position is that [it is important to release possibly-dangerous models 
     year={2019}
 }
 ```
+
+## Tutorial for Capstone Project
+
+### Basic Setup
+
+Please go through the following steps to do the basic setup of the capstone project.
+
+1. Use the following anaconda command to create a new conda environment called ```capstone ``` and enter the created environment.
+
+   ```conda create -y -n capstone python=3.6 && source activate capstone && pip install -r requirements-gpu.txt```
+
+2. Git clone this repository with the following command and will get a `grover` directory.
+
+   ```git clone https://github.com/ericlin8545/grover.git```
+
+3. Get into `grover`, and run the following commands to download the discrimination model of Grover from Google Cloud Storage.
+
+   ```bash
+   gsutil cp gs://grover-models/discrimination/generator=medium~discriminator=grover~discsize=medium~dataset=p=0.96/model.ckpt-1562.data-00000-of-00001 output/
+   gsutil cp gs://grover-models/discrimination/generator=medium~discriminator=grover~discsize=medium~dataset=p=0.96/model.ckpt-1562.index output/
+   gsutil cp gs://grover-models/discrimination/generator=medium~discriminator=grover~discsize=medium~dataset=p=0.96/model.ckpt-1562.meta output/
+   ```
+
+   **Note: **If you haven't installed Gsutil in your machine or workstation, you need to install it before running the above commands. For installing Gsutil, please follow the [tutorial](https://cloud.google.com/storage/docs/gsutil_install#linux).
+
+### Setup the used GPU for the attack program
+
+Before running the attack program, please use ```nvidia-smi``` to check which GPU is not occupied now, and setup the **CUDA_VISIBLE_DEVICES** to use the GPU.
+
+ For example, if you found that GPU 1 is free, use the `export CUDA_VISIBLE_DEVICES=1` to use GPU 1.
+
+### Run the Attack Program
+
+Use the following command to run the attack program
+
+```bash
+PYTHONPATH=$(pwd) python discrimination/attackGrover.py --input_data ./input_data/Machine_Label_Examples.txt --output_dir output/ --predict_test true --config_file ./lm/configs/large.json --recipe PWWS > output.txt
+```
+
+For the parameters, here is the explanation:
+
+- **input_data: **the file containing the fake news that is going to be attacked, and `Machine_Label_Examples.txt` is a file  that has 500 fake news that is labeld as machine by Grover.
+- **output_dir: **the directory that saves the numericla attacking results, not the text attacking result.
+- **predict_test: **predict the data with test label or not, since all of our test samples are labeled as test, so we need to turn it on to do the Grover discrimination.
+- **config_file: **the config file for input data, for here we used large format.
+- **recipe: **the attacking algorithm, you can replace `PWWS` with `BAE` or `BERTAttack`.
+
+And the attacking result will be standard outputed, so I just printed it to a file called `output.txt` in here. Feel free to change the printed file name.
+
+
+
