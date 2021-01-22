@@ -259,6 +259,11 @@ flags.DEFINE_string(
     "init_checkpoint", None,
     "Initial checkpoint (usually from a pre-trained model).")
 
+# Attacking Recipe (PWWSRen2019, BAEGarg2019, BERTAttackLi2020)
+flags.DEFINE_string(
+    "recipe", 'PWWS',
+    "used attacking recipe.")
+
 flags.DEFINE_integer(
     "max_seq_length", 1024,
     "The maximum total input sequence length after WordPiece tokenization. "
@@ -487,7 +492,13 @@ def main(_):
         )
 
     model_wrapper = CustomTensorFlowModelWrapper([estimator_large, estimator_medium, estimator_small])
-    attack = PWWSRen2019.build(model_wrapper)
+
+    if FLAGS.recipe == 'PWWS':
+        attack = PWWSRen2019.build(model_wrapper)
+    elif FLAGS.recipe == 'BAE':
+        attack = BAEGarg2019.build(model_wrapper)
+    elif FLAGS.recipe == 'BERTAttack':
+        attack = BERTAttackLi2020.build(model_wrapper)
 
     with open(FLAGS.input_data, "r") as f:
         lines = f.readlines()
