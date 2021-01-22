@@ -93,7 +93,7 @@ Please go through the following steps to do the basic setup of the capstone proj
    gsutil cp gs://grover-models/discrimination/generator=medium~discriminator=grover~discsize=medium~dataset=p=0.96/model.ckpt-1562.meta output/
    ```
 
-   **Note: **If you haven't installed Gsutil in your machine or workstation, you need to install it before running the above commands. For installing Gsutil, please follow the [tutorial](https://cloud.google.com/storage/docs/gsutil_install#linux).
+   **Note:** If you haven't installed Gsutil in your machine or workstation, you need to install it before running the above commands. For installing Gsutil, please follow the [tutorial](https://cloud.google.com/storage/docs/gsutil_install#linux).
 
 ### Setup the used GPU for the attack program
 
@@ -111,13 +111,10 @@ PYTHONPATH=$(pwd) python discrimination/attackGrover.py --input_data ./input_dat
 
 For the parameters, here is the explanation:
 
-- **input_data: **the file containing the fake news that is going to be attacked, and `Machine_Label_Examples.txt` is a file  that has 500 fake news that is labeld as machine by Grover.
-- **output_dir: **the directory that saves the numericla attacking results, not the text attacking result.
-- **predict_test: **predict the data with test label or not, since all of our test samples are labeled as test, so we need to turn it on to do the Grover discrimination.
-- **config_file: **the config file for input data, for here we used large format.
-- **recipe: **the attacking algorithm, you can replace `PWWS` with `BAE` or `BERTAttack`.
+- **inpput_data:** the file containing the fake news that is going to be attacked, and `Machine_Label_Examples.txt` is a file  that has 500 fake news that is labeld as machine by Grover.
+- **output_dir:** the directory that saves the numericla attacking results, not the text attacking result.
+- **predict_test:** predict the data with test label or not, since all of our test samples are labeled as test, so we need to turn it on to do the Grover discrimination.
+- **config_file:** the config file for input data, for here we used large format.
+- **recipe:** the attacking algorithm, you can replace `PWWS` with `BAE` or `BERTAttack`.
 
 And the attacking result will be standard outputed, so I just printed it to a file called `output.txt` in here. Feel free to change the printed file name.
-
-
-
