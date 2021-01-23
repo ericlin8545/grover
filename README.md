@@ -79,13 +79,17 @@ Please go through the following steps to do the basic setup of the capstone proj
 
 1. Use the following anaconda command to create a new conda environment called ```capstone ``` and enter the created environment.
 
-   ```conda create -y -n capstone python=3.6 && source activate capstone && pip install -r requirements-gpu.txt```
+   ```conda create -y -n capstone python=3.6 && source activate capstone```
 
 2. Git clone this repository with the following command and will get a `grover` directory.
 
    ```git clone https://github.com/ericlin8545/grover.git```
 
-3. Get into `grover`, and run the following commands to download the discrimination model of Grover from Google Cloud Storage.
+3. Get into the cloned `/grover` and execute the following commands.
+   
+   ```pip install -r requirements-gpu.txt && conda install -c anaconda cudnn```
+
+4. Execute the following commands to download the discrimination model of Grover from Google Cloud Storage.
 
    ```bash
    gsutil cp gs://grover-models/discrimination/generator=medium~discriminator=grover~discsize=medium~dataset=p=0.96/model.ckpt-1562.data-00000-of-00001 output/
