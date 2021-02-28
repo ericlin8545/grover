@@ -48,7 +48,7 @@ while line:
         line = input_file.readline()
         continue
     total_count += 1
-    print(line)
+    #print(line)
     if line.startswith('[91m0'):# re.search(r"\[91m0(.*)", line):
         from_0_count += 1
         if re.search(skipped_pattern, line):
@@ -77,12 +77,16 @@ while line:
             attacked_nextline = input_file.readline().rstrip()
         attacked = ""
         attacked_words_count = 0
-        while attacked_nextline and re.search(case_pattern, attacked_nextline) is False: #attacked_nextline.startswith('[91m0') is False:
+        total_attacked_words = []
+        #print(re.search(case_pattern, attacked_nextline))
+        while attacked_nextline and (re.search(case_pattern, attacked_nextline) is None): #attacked_nextline.startswith('[91m0') is False:
             attacked_words = re.findall(attacked_after_pattern, attacked_nextline)
+            #print("!!")
             if not attacked_words:
                 attacked += "\n" + attacked_nextline
             else:
                 num = len(attacked_words)
+                total_attacked_words.extend(attacked_words)
                 for i in range(num):
                     # print(attacked_words[i])
                     replaced_str = "*" + attacked_words[i] + "*" + " (" + total_original_words[attacked_words_count + i] + ")"
@@ -94,6 +98,9 @@ while line:
         # print(total_original_words)
         # print("attacked")
         # print(attacked)
+        print(total_original_words)
+        print(total_attacked_words)
+        print("---")
         output_file.write(attacked + "\n")
         num_replaced_words.append(len(total_original_words))
         if re.search(case_pattern, attacked_nextline): 
@@ -122,7 +129,7 @@ while line:
         while not original_nextline:
             original_nextline = input_file.readline().rstrip()
         while original_nextline:
-            total_original_words.extend(re.findall(attacked_before_pattern, original_nextline))
+            total_original_words.extend(re.findall(attacked_after_pattern, original_nextline))
             original_nextline = input_file.readline().rstrip()
         # skip all the empty lines, and get to the first line of attacked article
         attacked_nextline = input_file.readline().rstrip()
@@ -130,12 +137,14 @@ while line:
             attacked_nextline = input_file.readline().rstrip()
         attacked = ""
         attacked_words_count = 0
-        while attacked_nextline and re.search(case_pattern, attacked_nextline) is False: #attacked_nextline.startswith('[91m0') is False:
-            attacked_words = re.findall(attacked_after_pattern, attacked_nextline)
+        total_attacked_words = []
+        while attacked_nextline and re.search(case_pattern, attacked_nextline) is None: #attacked_nextline.startswith('[91m0') is False:
+            attacked_words = re.findall(attacked_before_pattern, attacked_nextline)
             if not attacked_words:
                 attacked += "\n" + attacked_nextline
             else:
                 num = len(attacked_words)
+                total_attacked_words.extend(attacked_words)
                 for i in range(num):
                     # print(attacked_words[i])
                     replaced_str = "*" + attacked_words[i] + "*" + " (" + total_original_words[attacked_words_count + i] + ")"
@@ -148,6 +157,9 @@ while line:
         # print("attacked")
         # print(attacked)
         output_file.write(attacked + "\n")
+        print(total_original_words)
+        print(total_attacked_words)
+        print("---")
         num_replaced_words.append(len(total_original_words))
         if re.search(case_pattern, attacked_nextline): 
             line = attacked_nextline
@@ -216,9 +228,10 @@ print("- skipped count: %d" % (from_0_skipped))
 print("- fail count: %d" % (from_0_failed))
 
 print("Originally detected as 'human' (1): %d" % from_1_count)
-print("- success count: %d, success rate: %.2f" % (from_1_to_0_count, from_1_to_0_count/from_1_count))
-print("- skipped count: %d" % (from_1_skipped))
-print("- fail count: %d" % (from_1_failed))
+if from_1_count != 0:
+    print("- success count: %d, success rate: %.2f" % (from_1_to_0_count, from_1_to_0_count/from_1_count))
+    print("- skipped count: %d" % (from_1_skipped))
+    print("- fail count: %d" % (from_1_failed))
 
 print("Average replaced words: %.2f" % (sum(num_replaced_words)/len(num_replaced_words)))
 
