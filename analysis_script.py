@@ -23,12 +23,14 @@ from_0_skipped = 0
 from_0_failed = 0
 from_0_to_1_count = 0
 
+from_0_num_replaced_words = []
+
 from_1_count = 0
 from_1_skipped = 0
 from_1_failed = 0
 from_1_to_0_count = 0
 
-num_replaced_words = []
+from_1_num_replaced_words = []
 
 # [91m0 (55%)[0m --> [92m1 (100%)[0m
 case_pattern = r"\[9(.*?)m(.*?) --> \[(.*)" # \((.*?)\)[0m
@@ -102,7 +104,7 @@ while line:
         print(total_attacked_words)
         print("---")
         output_file.write(attacked + "\n")
-        num_replaced_words.append(len(total_original_words))
+        from_0_num_replaced_words.append(len(total_original_words))
         if re.search(case_pattern, attacked_nextline): 
             line = attacked_nextline
         else:
@@ -160,7 +162,7 @@ while line:
         print(total_original_words)
         print(total_attacked_words)
         print("---")
-        num_replaced_words.append(len(total_original_words))
+        from_1_num_replaced_words.append(len(total_original_words))
         if re.search(case_pattern, attacked_nextline): 
             line = attacked_nextline
         else:
@@ -227,13 +229,15 @@ print("- success count: %d, success rate: %.2f" % (from_0_to_1_count, from_0_to_
 print("- skipped count: %d" % (from_0_skipped))
 print("- fail count: %d" % (from_0_failed))
 
+print("Average replaced words: %.2f" % (sum(from_0_num_replaced_words)/len(from_0_num_replaced_words)))
+
 print("Originally detected as 'human' (1): %d" % from_1_count)
 if from_1_count != 0:
     print("- success count: %d, success rate: %.2f" % (from_1_to_0_count, from_1_to_0_count/from_1_count))
     print("- skipped count: %d" % (from_1_skipped))
     print("- fail count: %d" % (from_1_failed))
 
-print("Average replaced words: %.2f" % (sum(num_replaced_words)/len(num_replaced_words)))
+print("Average replaced words: %.2f" % (sum(from_1_num_replaced_words)/len(from_1_num_replaced_words)))
 
 
 input_file.close()
